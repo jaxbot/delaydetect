@@ -18,34 +18,23 @@ const MTA_MODEL = {
 module.exports = mta;
 
 const OUTPUT_SAMPLE_DATA = {
-  getAllStops: () => {
+  getData: (callback, option, fileName) => {
     let dir = './sample_data';
     if (!fs.existsSync(dir)) fs.mkdirSync(dir);
-    MTA_MODEL.getStop()
+    callback(option)
     .then(res => {
-      fs.writeFile('./sample_data/allStopData.json', JSON.stringify(res, null, 2), err => {
+      fs.writeFile(`./sample_data/${fileName}.json`, JSON.stringify(res, null, 2), err => {
         if (err) throw err;
-        console.log('all stops data saved');
+        console.log('Data saved');
       })
     })
     .catch(err => console.log(err));
-  },
-  getMTAStatus: (serviceType = 'subway') => {
-    let dir = './sample_data';
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir);
-    MTA_MODEL.getStatus(serviceType)
-    .then(res => {
-      fs.writeFile('./sample_data/allMTAStatus.json', JSON.stringify(res, null, 2), err => {
-        if (err) throw err;
-        console.log('all status data saved');
-      })
-    })
-    .catch(err => console.log(err));
-  },
+  }
 }
 
-// OUTPUT_SAMPLE_DATA.getAllStops();
-// OUTPUT_SAMPLE_DATA.getMTAStatus();
+/* EXAMPLE CALLS FOR GENERATING SAMPLE DATA */
+// OUTPUT_SAMPLE_DATA.getData(MTA_MODEL.getStatus, 'subway', 'allMTAStatus');
+// OUTPUT_SAMPLE_DATA.getData(MTA_MODEL.getStop, null, 'allStopData');
 
 // MTA_MODEL.getStatus()
 // .then(res => console.log(res))
@@ -60,7 +49,7 @@ const OUTPUT_SAMPLE_DATA = {
 // mta.schedule('R16', 16).then(result => console.log(result.schedule['R16']));
 // mta.schedule('902').then(result => console.log(result.schedule['902']));
 
-mta.schedule('R16', 16).then(result => console.log(result.schedule['R16']));
+// mta.schedule('R16', 16).then(result => console.log(result.schedule['R16']));
 
 // mta.schedule(['635', 'A31'], [1, 26]).then(result =>console.log(result));
 
