@@ -1,4 +1,4 @@
-const mta = require('/mtaAPI.js');
+const mta = require('./mtaAPI.js');
 const app = require('express')();
 
 app.get('/', (req, res) => res.send('Hello World!'))

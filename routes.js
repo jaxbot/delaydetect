@@ -7,7 +7,6 @@ var E = [
 'A25', // 50 St
 'A27', // 42 St - Port Authority Bus Terminal
 'A28', // 34 St - Penn Station
-'A28', // 34 St - Penn Station
 'A30', // 23 St
 'A31', // 14 St
 'A32', // W 4 St
