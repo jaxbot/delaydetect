@@ -2,14 +2,9 @@ const Mta = require('mta-gtfs');
 const feedIds = require('./feed-ids');
 const { key } = require('./config');
 const fs = require('fs');
-const routes = require('./routes.json');
-
-console.log(routes);
-
-// const { routes, routeObj } = require('./routes.js');
-// const { A, C, E } = routes;
-
-console.log(routeObj);
+const routes = require('./routes/routes.json');
+const routesFull = require('./routes/routesFull.json');
+const { A, C, E } = routes;
 
 const mta = new Mta({key});
 

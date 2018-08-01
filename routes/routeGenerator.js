@@ -1,8 +1,8 @@
 const csv = require('csvtojson');
-const csvFilePath = './Stations.csv';
+const csvFilePath = './routes/Stations.csv';
 const fs = require("fs");
-const filepath = './routes.json';
-const filepath2 = './routesFull.json';
+const filepath = './routes/routes.json';
+const filepath2 = './routes/routesFull.json';
 
 function getRouteStopIds() {
   return csv()
