@@ -2,7 +2,7 @@ const Mta = require('mta-gtfs');
 const feedIds = require('./feed-ids');
 const { key } = require('./config');
 const fs = require('fs');
-const { E } = require('./routes.js')
+const { A, C, E } = require('./routes.js')
 
 const mta = new Mta({key});
 
@@ -63,6 +63,6 @@ const OUTPUT_SAMPLE_DATA = {
 // MTA_MODEL.getStationSchedule('A31', 'C', 'S')
 // .then(res => console.log(res));
 
-MTA_MODEL.getLine(E, 'E')
-.then(res => console.log(JSON.stringify(res, null, 4)))
-.catch(err => console.error(err));
+// MTA_MODEL.getLine(E, 'E')
+// .then(res => console.log(JSON.stringify(res, null, 4)))
+// .catch(err => console.error(err));
