@@ -4,7 +4,7 @@ const { key } = require('./config');
 const fs = require('fs');
 const routes = require('./routes/routes.json');
 const routesFull = require('./routes/routesFull.json');
-const { A, C, E } = routes;
+const { '1': $1, '2': $2, '3': $3, '4': $4, '5': $5, '6': $6, '7': $7, S, A, C, E, H, FAS, N, Q, R, W, B, D, F, M, L, SIR, G, J, Z } = routes;
 
 const mta = new Mta({key});
 
@@ -69,6 +69,8 @@ const OUTPUT_SAMPLE_DATA = {
 // MTA_MODEL.getStationSchedule('A31', 'C', 'S')
 //   .then(res => console.log(res));
 // MTA_MODEL.getLine(E, 'E')
+//   .then(res => console.log(JSON.stringify(res, null, 4)));
+// MTA_MODEL.getLine($1, '1')
 //   .then(res => console.log(JSON.stringify(res, null, 4)));
 // MTA_MODEL.getLine(['A31'], 'E')
 //   .then(res => console.log(JSON.stringify(res, null, 4)));
