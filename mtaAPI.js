@@ -2,7 +2,8 @@ const Mta = require('mta-gtfs');
 const feedIds = require('./feed-ids');
 const { key } = require('./config');
 const fs = require('fs');
-const { A, C, E } = require('./routes.js')
+const { routes, routeObj } = require('./routes.js');
+const { A, C, E } = routes;
 
 const mta = new Mta({key});
 
@@ -33,6 +34,11 @@ const MTA_MODEL = {
         return data;
       })
   },
+
+  // @return schedule info for one station on a single line letter
+  getStation: (stationName) => {
+
+  }
 }
 
 module.exports = {mta, MTA_MODEL};
@@ -58,11 +64,10 @@ const OUTPUT_SAMPLE_DATA = {
 
 /* EXAMPLE CALLS FOR STATION SCHEDULES */
 // MTA_MODEL.getStationSchedule('A31', 26, 'N')
-// .then(res => console.log(res));
-
+//   .then(res => console.log(res));
 // MTA_MODEL.getStationSchedule('A31', 'C', 'S')
-// .then(res => console.log(res));
-
+//   .then(res => console.log(res));
 // MTA_MODEL.getLine(E, 'E')
-// .then(res => console.log(JSON.stringify(res, null, 4)))
-// .catch(err => console.error(err));
+//   .then(res => console.log(JSON.stringify(res, null, 4)));
+// MTA_MODEL.getLine(['A31'], 'E')
+//   .then(res => console.log(JSON.stringify(res, null, 4)));

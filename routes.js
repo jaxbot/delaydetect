@@ -1,22 +1,47 @@
+const stops = require('./sample_data/allStopData.json');
+
+// console.log(stops);
+
 const routes = {
-  A: [],
-  C: [],
-  E: [
-    'G21', // Queens Plaza
-    'F09', // Court Sq
-    'F11', // Lexington Av/53 St
-    'F12', // 5 Av/53 St
-    'D14', // 7 Av
-    'A25', // 50 St
-    'A27', // 42 St - Port Authority Bus Terminal
-    'A28', // 34 St - Penn Station
-    'A30', // 23 St
-    'A31', // 14 St
-    'A32', // W 4 St
-    'A33', // Spring St
-    'A34', // Canal St
-    'E01', // World Trade Center
-    ]
+  '1': [],
+  '2': [],
+  '3': [],
+  '4': [],
+  '5': [],
+  '6': [],
+  'S': [],
+  'A': [],
+  'C': [],
+  'E': ['G21', 'F09', 'F11', 'F12', 'D14', 'A25', 'A27', 'A28', 'A30', 'A31', 'A32', 'A33', 'A34', 'E01'],
+  'H': [],
+  'FAS': [],
+  'N': [],
+  'Q': [],
+  'R': [],
+  'W': [],
+  'B': [],
+  'D': [],
+  'F': [],
+  'M': [],
+  'L': [],
+  'SIR': [],
+  'G': [],
+  'J': [],
+  'Z': [],
+  '7': []
 }
 
-module.exports = routes;
+const routeObj = (() => {
+  let data = {};
+  for (let route of Object.keys(routes)) {
+    let routeInfo = routes[route].map(stop => {
+      return {[stop]: stops[stop].stop_name}
+    });
+    data[route] = routeInfo;
+  }
+  return data;
+})();
+
+// console.log(routeObj);
+
+module.exports = {routes, routeObj};
