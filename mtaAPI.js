@@ -13,16 +13,25 @@ const MTA_MODEL = {
   // @return general info about mta service; omit service type to get all services (subway, bus, BT, LIRR, MetroNorth)
   getStatus: serviceType => mta.status(serviceType),
 
-  // @return schedule info for one station, on a single line and direction
-  getStationSchedule: (stopId, feed_id, direction = 'N') => {
-    return mta.schedule(stopId, feed_id)
+  // @return schedule info for one station, on a single line color and direction
+  getStationSchedule: (stopId, feedId, direction) => {
+    feedId = typeof feedId === 'Number' ? feedId : feedIds[feedId];
+    return mta.schedule(stopId, feedId)
     .then(res => res.schedule[stopId][direction]);
   },
 
-  //@return station schedule info for array of input stops on the given feed_id (line color)
+  //@return station schedule info for array of input stops on the given line
   getLine: (lineStopIds, lineName) => {
     return mta.schedule(lineStopIds, feedIds[lineName])
-      .then(res => res.schedule)
+      .then(res => {
+        let data = {};
+        for (let stop in res.schedule) {
+          data[stop] = {};
+          data[stop].N = res.schedule[stop].S.filter(train => train.routeId === lineName);
+          data[stop].S = res.schedule[stop].N.filter(train => train.routeId === lineName);
+        }
+        return data;
+      })
   },
 }
 
@@ -48,9 +57,12 @@ const OUTPUT_SAMPLE_DATA = {
 // OUTPUT_SAMPLE_DATA.getData(MTA_MODEL.getStop, null, 'all-stop-data');
 
 /* EXAMPLE CALLS FOR STATION SCHEDULES */
-// MTA_MODEL.getStationSchedule('A31', 26)
+// MTA_MODEL.getStationSchedule('A31', 26, 'N')
 // .then(res => console.log(res));
 
-// MTA_MODEL.getLine(E, 'E')
-// .then(res => console.log(res))
-// .catch(err => console.err(err));
+// MTA_MODEL.getStationSchedule('A31', 'C', 'S')
+// .then(res => console.log(res));
+
+MTA_MODEL.getLine(E, 'E')
+.then(res => console.log(JSON.stringify(res, null, 4)))
+.catch(err => console.error(err));
