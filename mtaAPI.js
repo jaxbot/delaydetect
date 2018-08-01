@@ -5,6 +5,8 @@ const fs = require('fs');
 const { routes, routeObj } = require('./routes.js');
 const { A, C, E } = routes;
 
+console.log(routeObj);
+
 const mta = new Mta({key});
 
 const MTA_MODEL = {
