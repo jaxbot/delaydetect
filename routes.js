@@ -17,5 +17,5 @@ var E = [
 ];
 
 module.exports = {
-  E: E,
+  E,
 };

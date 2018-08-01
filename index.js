@@ -1,27 +1,21 @@
-var Mta = require('mta-gtfs');
-var mta = new Mta({
-  key: require("./config")['key'], // only needed for mta.schedule() method
-  feed_id: 26                  // optional, default = 1
-});
-
-const express = require('express')
-const app = express()
+const mta = require('/mtaAPI.js');
+const app = require('express')();
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
+app.listen(3000, () => console.log('Server started on PORT 3000'));
 
 var stopArrivals = {};
 var stopArrivalLastId = {};
 var stopArrivalsLastAverage = {};
 var DELAY_IN_SECONDS_THRESHOLD = 90;
 
-console.log(require("./config")['key']);
+// console.log(require("./config")['key']);
 
-mta.stop().then(function (allStops) {
+mta.stop().then(allStops => {
   //console.log(allStops);
   function trackTrains() {
-    mta.schedule('A31', 26).then(function (result) {
+    mta.schedule('A31', 26).then(result => {
       //console.log(JSON.stringify(result, null, 5));
       for (var stop in result.schedule) {
         if (!allStops[stop]) {
