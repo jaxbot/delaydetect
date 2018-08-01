@@ -1,5 +1,0 @@
-## DelayDetect
-
-DelayDetect is an API that that compiles and processes feed data from the [GTFS (General Transit Feed Specification) Realtime](https://developers.google.com/transit/gtfs-realtime/ "GTFS Documentation") feed specification developed by Google and Live Transit Updates. The GTFS Realtime data exchange format uses [Protocol Buffers](https://developers.google.com/protocol-buffers/, "Protocol Buffer Documentation") which developers can compile into streams using a `.proto` file. Proto2 supports Java, Python, Objective-C, and C++, but the new Proto3 will expand support to JavaScript and other languages.
-
-The accompanying web client for DelayDetect uses our own API to provide users with simple-to-read visualizations about the health of a subway line, delays, and station information. Riders will then be able to make transition decisions and plan a smoother trip.

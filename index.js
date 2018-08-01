@@ -1,4 +1,5 @@
-const mta = require('./mtaAPI.js');
+const { mta, MTA_MODEL } = require('./mtaAPI.js');
+let { getStop, getStatus, getStationSchedule, getLine } = MTA_MODEL; 
 const app = require('express')();
 
 app.get('/', (req, res) => res.send('Hello World!'))
