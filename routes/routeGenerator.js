@@ -1,9 +1,23 @@
 const csv = require('csvtojson');
 const csvFilePath = './routes/Stations.csv';
 const stopTimesCsvFilePath = './routes/StopTimes.csv';
+const tripsCsvFilePath = './routes/Trips.csv';
 const fs = require("fs");
 const filepath = './routes/routes.json';
 const filepath2 = './routes/routesFull.json';
+
+var stopsJson = [];
+var tripsByTripId = {};
+
+function getTripsFromCsv() {
+  return csv()
+    .fromFile(tripsCsvFilePath)
+    .then(trips => {
+      trips.forEach((trip) => {
+        tripsByTripId[trip['trip_id']] = trip;
+      });
+    });
+}
 
 function getRouteStopIds(fullRoutes) {
   return csv()
@@ -22,11 +36,12 @@ function getRouteStopIds(fullRoutes) {
       // Build a list of trips for our route.
       var trips = {};
       stopTimes.forEach(stopTime => {
-        var routeLetter = stopTime['trip_id'].split('_')[2].split('.')[0];
+        var tripDefinition = tripsByTripId[stopTime['trip_id']];
+        var routeLetter = tripDefinition['route_id'];
         if (routeLetter != key) return;
 
         // Only consider weekday routes since weekends are often customized for construction.
-        if (stopTime['trip_id'].indexOf("-Weekday-") !== -1) {
+        //if (stopTime['trip_id'].indexOf("-Weekday-") !== -1) {
           if (!trips[stopTime['trip_id']]) {
             trips[stopTime['trip_id']] = {};
           }
@@ -34,16 +49,19 @@ function getRouteStopIds(fullRoutes) {
           var stopIdWithDirection = stopTime['stop_id'];
           var bareStopId = stopIdWithDirection.substring(0, stopIdWithDirection.length - 1);
           trips[stopTime['trip_id']][bareStopId] = stopTime;
-        }
+        //}
       });
 
       // Find a trip with every daytime stop in it.
       var completeTrip = null;
+      var foundStops = {};
       for (var tripId in trips) {
         var satisfied = true;
         fullRoute.orderedStops.forEach((stopId) => {
           if (!trips[tripId][stopId]) {
             satisfied = false;
+          } else {
+            foundStops[stopId] = true;
           }
         });
 
@@ -60,6 +78,11 @@ function getRouteStopIds(fullRoutes) {
         });
       } else {
         console.log("NO COMPLETE TRIP FOR " + key);
+        fullRoute.orderedStops.forEach((stopId) => {
+          if (!foundStops[stopId]) {
+            console.log("No trip found for " + stopId + " (" + getNameFromStopId(stopId) + ")");
+          }
+        });
       }
     }
     return fullRoutes;
@@ -79,6 +102,7 @@ function getRouteStopsFullInfo() {
   return csv()
   .fromFile(csvFilePath)
   .then(json => {
+    stopsJson = json;
     const routeObj = {};
     json.forEach(stop => {
       stop['Daytime Routes'].split(' ').forEach(line => {
@@ -101,9 +125,22 @@ function getRouteStopsFullInfo() {
 }
 
 
-getRouteStopsFullInfo().then((routes) => {
-  getRouteStopIds(routes);
+getTripsFromCsv().then(() => {
+  getRouteStopsFullInfo().then((routes) => {
+    getRouteStopIds(routes);
+  });
 });
+
+function getNameFromStopId(stopId) {
+  var retval = null;
+  stopsJson.forEach(stop => {
+    if (stop['GTFS Stop ID'] == stopId) {
+      retval = stop['Stop Name'];
+    }
+  });
+
+  return retval;
+}
 
 
 module.exports = {getRouteStopIds, getRouteStopsFullInfo};
