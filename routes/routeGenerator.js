@@ -40,13 +40,14 @@ function getRouteStopIds(fullRoutes) {
         var routeLetter = tripDefinition['route_id'];
         if (routeLetter != key) return;
 
-        // Only consider weekday routes since weekends are often customized for construction.
+        var stopIdWithDirection = stopTime['stop_id'];
+        var direction = stopIdWithDirection.substring(stopIdWithDirection.length - 1);
+        var bareStopId = stopIdWithDirection.substring(0, stopIdWithDirection.length - 1);
+        if (direction != "S") return;
+
         if (!trips[stopTime['trip_id']]) {
           trips[stopTime['trip_id']] = {};
         }
-
-        var stopIdWithDirection = stopTime['stop_id'];
-        var bareStopId = stopIdWithDirection.substring(0, stopIdWithDirection.length - 1);
         trips[stopTime['trip_id']][bareStopId] = stopTime;
       });
 
@@ -54,7 +55,7 @@ function getRouteStopIds(fullRoutes) {
       // Not every trip contains every stop; some routes, like the 5, use
       // reverse branching which means no trip contains every stop. Stops should
       // be sorted in the order they occur in a route containing both, and in
-      // cases where no route contains both (i.e. the branch point), alphabetically.
+      // cases where no route contains both, consider the stops equal.
       fullRoute.orderedStops.sort((a, b) => {
         // Try to find a trip containing both stops.
         var foundBothStops = false;
@@ -70,9 +71,8 @@ function getRouteStopIds(fullRoutes) {
         if (foundBothStops) {
           return foundTrip[a]['stop_sequence'] - foundTrip[b]['stop_sequence'];
         } else {
-          // Note that we're sorting the stop ID alphabetically, not the stop.
-          // This is okay because stop IDs tend to be sequential numbers prefixed by their trunk line.
-          return a > b ? 1 : 0;
+          // The stops are equivalent as they are on separate branches.
+          return 0;
         }
       });
     }
