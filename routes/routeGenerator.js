@@ -41,15 +41,13 @@ function getRouteStopIds(fullRoutes) {
         if (routeLetter != key) return;
 
         // Only consider weekday routes since weekends are often customized for construction.
-        //if (stopTime['trip_id'].indexOf("-Weekday-") !== -1) {
-          if (!trips[stopTime['trip_id']]) {
-            trips[stopTime['trip_id']] = {};
-          }
+        if (!trips[stopTime['trip_id']]) {
+          trips[stopTime['trip_id']] = {};
+        }
 
-          var stopIdWithDirection = stopTime['stop_id'];
-          var bareStopId = stopIdWithDirection.substring(0, stopIdWithDirection.length - 1);
-          trips[stopTime['trip_id']][bareStopId] = stopTime;
-        //}
+        var stopIdWithDirection = stopTime['stop_id'];
+        var bareStopId = stopIdWithDirection.substring(0, stopIdWithDirection.length - 1);
+        trips[stopTime['trip_id']][bareStopId] = stopTime;
       });
 
       // Sort the stops in the order they occur in a trip.
