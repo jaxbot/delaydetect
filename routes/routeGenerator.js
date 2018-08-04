@@ -52,38 +52,31 @@ function getRouteStopIds(fullRoutes) {
         //}
       });
 
-      // Find a trip with every daytime stop in it.
-      var completeTrip = null;
-      var foundStops = {};
-      for (var tripId in trips) {
-        var satisfied = true;
-        fullRoute.orderedStops.forEach((stopId) => {
-          if (!trips[tripId][stopId]) {
-            satisfied = false;
-          } else {
-            foundStops[stopId] = true;
+      // Sort the stops in the order they occur in a trip.
+      // Not every trip contains every stop; some routes, like the 5, use
+      // reverse branching which means no trip contains every stop. Stops should
+      // be sorted in the order they occur in a route containing both, and in
+      // cases where no route contains both (i.e. the branch point), alphabetically.
+      fullRoute.orderedStops.sort((a, b) => {
+        // Try to find a trip containing both stops.
+        var foundBothStops = false;
+        var foundTrip = null;
+        for (var tripId in trips) {
+          if (trips[tripId][a] && trips[tripId][b]) {
+            foundTrip = trips[tripId];
+            foundBothStops = true;
+            break;
           }
-        });
-
-        if (satisfied) {
-          completeTrip = trips[tripId];
-          break;
         }
-      }
 
-      // Sort the stops in the order they occur in this trip
-      if (completeTrip) {
-        fullRoute.orderedStops.sort((a, b) => {
-          return completeTrip[a]['stop_sequence'] - completeTrip[b]['stop_sequence'];
-        });
-      } else {
-        console.log("NO COMPLETE TRIP FOR " + key);
-        fullRoute.orderedStops.forEach((stopId) => {
-          if (!foundStops[stopId]) {
-            console.log("No trip found for " + stopId + " (" + getNameFromStopId(stopId) + ")");
-          }
-        });
-      }
+        if (foundBothStops) {
+          return foundTrip[a]['stop_sequence'] - foundTrip[b]['stop_sequence'];
+        } else {
+          // Note that we're sorting the stop ID alphabetically, not the stop.
+          // This is okay because stop IDs tend to be sequential numbers prefixed by their trunk line.
+          return a > b ? 1 : 0;
+        }
+      });
     }
     return fullRoutes;
   })

@@ -23,7 +23,6 @@ const routesFull = require('./routesFull');
 //})
 
 for (var routeId in routes) {
-  if (routeId != 'E') continue;
   var route = routes[routeId];
   console.log(routeId + ":");
   route.orderedStops.forEach((stopId) => {
